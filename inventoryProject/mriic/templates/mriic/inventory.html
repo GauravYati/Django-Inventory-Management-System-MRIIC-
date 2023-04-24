@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    {% if messages %} {% for message in messages %}
+    <div class="mt-5 alert alert-{{ message.tags }}" id="message">
+      {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% include "mriic/NavbarLogout.html" %}
+    <div class="container mt-5">
+      {% for x in results %}
+      <div class="card mt-5 mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img
+              src="{{x.item_img.url}}"
+              class="img-fluid rounded-start"
+              alt="..."
+              style="height: 300px; object-fit: fill; padding: 0"
+            />
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{x.name}}</h5>
+                <p class="card-text">Categories:
+                  {% for category in x.category.all %}
+                    {{ category.name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}</p>
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <div>
+                    <input
+                      class="text-center mb-3"
+                      type="number"
+                      value="{{x.item_qty}}"
+                      style="width: fit-content"
+                      name="qty"
+                    />
+                  </div>
+                  {% if x.featured %}
+                  <div>
+                    <input
+                      class="mb-3"
+                      type="checkbox"
+                      value="True"
+                      name="isFeatured"
+                      id="checkFeatured"
+                      checked
+                    />
+                    <label for="checkFeatured">Featured</label>
+                  </div>
+                  {% else %}
+                  <div>
+                    <input
+                      class="mb-3"
+                      type="checkbox"
+                      value="True"
+                      name="isFeatured"
+                      id="checkFeatured"
+                    />
+                    <label for="checkFeatured">Featured</label>
+                  </div>
+                  {% endif %}
+                  <div>
+                    <input
+                      class="text-center mb-3"
+                      type="text"
+                      value="{{x.name}}"
+                      style="visibility: hidden; width: fit-content"
+                      name="item_name"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-success" name="action" value="save">save</button>
+                  <button type="submit" class="btn btn-danger" name="action" value="delete">delete</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    >
+      var x = document.getElementById("message").setTimeout(() => {
+          alert("{{message.tags}}")
+      }, 3000);
+    </script>
+  </body>
+</html>
