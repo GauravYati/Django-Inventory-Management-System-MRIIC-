@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Filter</h3>
+            </div>
+                <p>Categories</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <h3>Filter by category:</h3>
+                    <div style="flex-direction: row ; display: flex;">
+                    {% for category in categories %}
+                    <label class="switch mx-1">
+                        <input class="ms-4 me-1" type="checkbox" name="categories" value="{{ category.name }}"><br>{{ category.name }}
+                        <span class="slider"></span>
+                      </label>
+                    {% endfor %}
+                    </div>
+                    <br>
+                    <input type="submit" value="Apply" class="btn btn-danger mb-4">
+                </form>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Filter</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                </div>
+            </nav>
+</body>
+</html>
