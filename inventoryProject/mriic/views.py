@@ -48,10 +48,12 @@ def search(request):
     if request.method == "POST":
         query_name = request.POST.get('name', None)
         if query_name:
-            
-            results = Item.objects.filter(name__contains=query_name)
-            return render(request, 'mriic/search.html', {"results":results})
+            results = Item.objects.filter(name__icontains=query_name)
+            results |= Item.objects.filter(category__name__icontains=query_name)
+            results = results.distinct()
+            return render(request, 'mriic/search.html', {"page_obj":results})
     return render(request, 'mriic/index.html')
+
 
 def home(request):
     
@@ -114,7 +116,7 @@ def filter_item(request):
         selected_categories = request.POST.getlist('categories') 
         if selected_categories:
             items = Item.objects.filter(category__name__in=selected_categories) 
-    context = {'categories': categories, 'items': items}
+    context = {'categories': categories, 'page_obj': items}
     return render(request, "mriic/filter.html", context)
 
 @login_required

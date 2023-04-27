@@ -7,22 +7,26 @@
     <title>Document</title>
     <style>
         .aboutcontainer {
-            background-color: #7B7263;
+            background-color: F0C768;
+            color: rgb(0, 0, 0) !important;
         }
-        .video-responsive {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-}
+  
+        .video-responsive{
+overflow:hidden;
+padding-bottom:56.25%;
+position:relative;
+height:0;
+margin: 20px;
+border-radius: 10px 10px 10px 10px;
 
-.video-responsive iframe,
-.video-responsive object,
-.video-responsive embed {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+}
+}
+.video-responsive iframe{
+left:0;
+top:0;
+height:100%;
+width:100%;
+position:relative;
 }
     </style>
 </head>
@@ -30,14 +34,13 @@
     <div class="aboutcontainer">
         <div class="row">
             <div class="col">
-                <div class="video-responsive">
-                    <iframe width="700" height="450" src="https://www.youtube.com/embed/KFKIBacw8Ts" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                    </div>
+                <h1 style="display: block; float: center; margin-top :20px; margin-left: 70px;";>About Us</h1>
             </div>
             <div class="col">
                 <div class="about"><h1>
-                    about us
-                </h1>
+                    <div class="video-responsive">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/srFlVttybN8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
                 </div>
             </div>
         </div>

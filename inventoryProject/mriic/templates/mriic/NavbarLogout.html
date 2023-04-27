@@ -25,7 +25,11 @@
           </button>
             <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel"><img src="{% static 'mriic/MR_white.png' %}" alt="" style="height: 40px; width:85px;"></h5>
+                    {% if user.is_authenticated %}
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Hello, {{user.username}}</h5>
+                    {% else %}
+                    <a class="navbar-brand" href="{% url 'home'%}"><img src="{% static 'mriic/MR_white.png' %}" alt="" style="height: 40px; width:85px;"></a>
+                    {% endif %}
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
@@ -33,35 +37,26 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a>
                             <li class="nav-item dropdown">
-                                {% if user.is_authenticated %}
-
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                                </li>
+                                {% if user.is_staff %}
+                               
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'inv' %}">Edit Inventory</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'image_upload' %}">Add Item </a></li>
+                        
+                                {% endif %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">{{user.username}}</a>
+                                   <a class="nav-link" href="{% url 'filter_item'%}">All Products</a>
                                 </li>
-
+                                {% if user.is_authenticated %}
+                                <li class="nav-item ">
+                                  
+                                    <a class="nav-link" href="{% url 'logout' %}">  <div class="d-grid gap-2 mt-5"><button class="btn btn-danger"> Logout</button></div></a>                           
+                                </li>
                                 {% else %}
 
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'login' %}">Login</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'signup' %}">Signup</a>
-                                </li>
-
                                 {% endif %}
-                                {% if user.is_staff %}
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Additional Features</a>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" href="{% url 'inv' %}">Edit Inventory</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'image_upload' %}">Add Item </a></li>
-                                </ul>
-                                {% endif %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'filter_item'%}">Filter By category</a>
-                                </li>
                             </li>
                     </ul>
                 </div>
