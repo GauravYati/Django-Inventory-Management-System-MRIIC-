@@ -52,7 +52,7 @@ def search(request):
             results |= Item.objects.filter(category__name__icontains=query_name)
             results = results.distinct()
             return render(request, 'mriic/search.html', {"page_obj":results})
-    return render(request, 'mriic/index.html')
+    return redirect(home)
 
 
 def home(request):

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,21 +13,25 @@
     />
     <title>MRIIC</title>
     <style>
-     body {
+      body{
     background-color: #F7F8F5 !important;
     font-family: 'Times New Roman', Times, serif !important;
      }
-
-
+     .noti{
+      z-index: 99;
+      position: relative;
+     }
     </style>
   </head>
-  <body>
-    </style>
-    {% load static %} {% if messages %} {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %} {% endif %} {% include "mriic/NavbarLogout.html"%}
+
+    <body>
+    <!-- <div class="alert alert-success alert-dismissible noti">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>Success!</strong> This alert box could indicate a successful or positive action.
+    </div> -->
+    {% include "mriic/NavbarLogout.html"%}
     {% include "mriic/herosection.html" %}
-    <h3 style="margin-top :1%;;"><center> Featured Products </center></h3>
+    <h1 style="margin-top :1%;;"><center> Featured Products </center></h1>
     {% include "mriic/cardslider.html"%}
     {% include "mriic/about.html"%}
     {% include "mriic/footer.html"%}
