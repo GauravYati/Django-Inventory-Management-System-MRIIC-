@@ -15,9 +15,8 @@
 </head>
 
 <body>
-    {% if messages %} {% for message in messages %}
-    <div class="mt-5 alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %} {% endif %} {% load crispy_forms_tags %}
+   
+     {% load crispy_forms_tags %}
 
     <!--Login-->
     <div class="container py-4 px-5">
@@ -26,7 +25,7 @@
             {% csrf_token %} {{ login_form|crispy }}
             <button class="btn btn-primary my-2 " style="text-align: center;" type="submit">Login</button>
         </form>
-        <p class="text-center">Don't have an account? <a href="/signup">Create an account</a>.</p>
+
     </div>
     {% include "mriic/footer.html"%}
 </body>

@@ -27,13 +27,12 @@
   </head>
 
   <body class="body">
-    {% if messages %} {% for message in messages %}
-    <div class="mt-5 alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %} {% endif %} {% include "mriic/NavbarLogout.html"%}
-    <div class="container" style="width:75vw">
+    
+     {% include "mriic/NavbarLogout.html"%}
+    <div class="container" style="width:95%">
       <div class="d-flex flex-row justify-content-center mt-5">
         <!-- card -->
-        <div class="card shadow-lg p-3 m-5 bg-white rounded" style="width: 75vw;">
+        <div class="card shadow-lg p-3 m-5 bg-white rounded" style="width: 95%;">
           <div class="card-header">
             <h2>Insert Items</h2>
           </div>
@@ -49,19 +48,25 @@
                 class="btn btn-primary btn-user btn-block mt-3"
               />
               <br />
-              <button
-                id="add_btn"
-                class="btn btn-success btn-user btn-block mt-3"
-                onclick="add_field_add()">
-                add category
-              </button>
-              <br />
-              <button
-                id="rem_btn"
-                class="btn btn-danger btn-user btn-block mt-3"
-                onclick="add_field_rem()">
-                remove category
-              </button>
+              <div class="row">
+                <div class="col">
+                  <button
+                  id="add_btn"
+                  class="btn btn-success btn-user btn-block mt-3"
+                  onclick="add_field_add()">
+                  add category
+                </button>
+                </div>
+                <div class="col">
+                  <button
+                  id="rem_btn"
+                  class="btn btn-danger btn-user btn-block mt-3"
+                  onclick="add_field_rem()">
+                  remove category
+                </button>
+                </div>
+              </div>
+           
             </form>
             <form
               class="mt-3"

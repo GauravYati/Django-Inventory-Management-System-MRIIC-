@@ -14,7 +14,7 @@ h3
 	color: #000000 !important;
 }
  .col{
-	column-gap: 40px;
+	column-gap: 1%;
  }
  .wrapper {
 	 width: 250px;
@@ -129,55 +129,49 @@ h3
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
 <body>
-    <div id="products" class="container text-center mt-5 mb-3" style="scroll-behavior: smooth;">
-        <div class="row row-cols-2 mt-5 g-4">
-            {% for x in page_obj %}
-            <div class="col-md-2 col-sm-6 mx-3 text-center mb-2">
-
-                    <div class="wrapper">
-                        <div class="container mt-3 mb-3">
-                          <div class="top" style="background-image: url({{ x.item_img.url }}) ;">
-                          
-                          </div>
-                          <div class="bottom mt-2">
-                            <div class="left">
-                              <div class="details">
-                                <h5>{{x.name}}</h5><br>
-                                <p>Quantity: {{x.item_qty}}</p>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="inside">
-                          <div class="icon"><i class="bi bi-info-circle-fill"></i></div>
-                          <div class="contents">
-                            <table>
-                               
-                              <tr>
-                                <th>Categories:</th>
-                              </tr>
-                              {% for category in x.category.all %}
-                              <tr>
-                                <td >{{ category.name }}</td>
-                              </tr>
-                              {% if not forloop.last %} {% endif %}
-                                        {% endfor %}
-                            </table>
-							<div style="margin-top: 20%;">
-								<div class="d-grid gap-2 mt-5">
-									<button class="btn btn-success mt-1" onclick="window.location.href='{% url 'home'%}'" >More Info</button>
+	<div id="products" class="container text-center mt-5 mb-3" style="scroll-behavior: smooth;">
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mt-5 g-4">
+			{% for x in page_obj %}
+			<div class="col mb-4">
+				<div class="wrapper">
+					<div class="container mt-3 mb-3">
+						<div class="top" style="background-image: url({{ x.item_img.url }});">
+						</div>
+						<div class="bottom mt-2">
+							<div class="left">
+								<div class="details">
+									<h5>{{x.name}}</h5><br>
+									<p>Quantity: {{x.item_qty}}</p>
 								</div>
 							</div>
-                          </div>
-                        </div>
-                
-                      </div>
-                </div>
-            </div> 
-            {% endfor %}
-        </div>
-
-    </div>
-
+						</div>
+						<div class="inside">
+							<div class="icon"><i class="bi bi-info-circle-fill"></i></div>
+							<div class="contents">
+								<div class="" style="text-align: left;">
+								Categories:<br>
+									
+									{% for category in x.category.all %}
+								
+									<span style=" margin: 2%; padding:2px; padding-left: 4px; padding-right: 4px; display: inline_block; border: 1px solid gray; vertical-align: middle; border-radius: 2px solid black; border-radius: 10px; background: #c6c3c3 ">#{{ category.name }} </span>
+									
+									{% if not forloop.last %} {% endif %}
+									{% endfor %}
+								</div>
+								<div style="margin-top: 20%;">
+									<div class="d-grid gap-2 mt-5">
+										<button class="btn btn-success mt-1" onclick="window.location.href='{{x.id}}'" >More Info</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> 
+			{% endfor %}
+		</div>
+	</div>
+	
     <div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">

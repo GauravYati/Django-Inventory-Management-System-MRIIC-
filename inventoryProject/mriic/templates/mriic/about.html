@@ -1,49 +1,68 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>About Us</title>
     <style>
         .aboutcontainer {
-            background-color: F0C768;
-            color: rgb(0, 0, 0) !important;
+           
+            color: #000 !important;
+            padding: 20px;
         }
   
-        .video-responsive{
-overflow:hidden;
-padding-bottom:56.25%;
-position:relative;
-height:0;
-margin: 20px;
-border-radius: 10px 10px 10px 10px;
+        .video-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+            width: 100%;
+            float: none;
+            clear: both;
+            object-fit: fill;
+        }
+    }
+        .video-responsive iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
 
-}
-}
-.video-responsive iframe{
-left:0;
-top:0;
-height:100%;
-width:100%;
-position:relative;
-}
+        @media only screen and (max-width: 768px) {
+            .aboutcontainer {
+                display: flex;
+                flex-direction: column;
+                padding: 20px 10px;
+            }
+
+            .col {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .video-responsive {
+                margin-top: 20px;
+            }
+        }
     </style>
-<head>
+</head>
+<body>
     <div class="aboutcontainer">
         <div class="row">
             <div class="col">
-            <div class="" style="display: block; float: center; margin-top :20px; margin-left: 70px;">
-                <h1 >About Us</h1>
-              <center><img src="{% static 'mriic/logo2.png' %}" alt="" style="height: 150px; width:300px;"></center>  
-<p>Manav Rachna Innovation and Incubation Center is associated with a wide spectrum of Industry partners by way of MoUs to provide best possible research opportunities for students as well as faculties.
-</p>            </div>
-        </div>
+                <h1>About Us</h1>
+                <center><img src="{% static 'mriic/logo2.png' %}" alt="MRIIC logo" style="height: auto; max-width: 100%;"></center>
+                <p>Manav Rachna Innovation and Incubation Center is associated with a wide spectrum of Industry partners by way of MoUs to provide best possible research opportunities for students as well as faculties.</p>
+            </div>
             <div class="col">
-                <div class="about"><h1>
+                <div class="about">
                     <div class="video-responsive">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/srFlVttybN8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>

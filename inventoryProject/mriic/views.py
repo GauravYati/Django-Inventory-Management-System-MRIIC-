@@ -119,6 +119,7 @@ def filter_item(request):
     context = {'categories': categories, 'page_obj': items}
     return render(request, "mriic/filter.html", context)
 
+
 @login_required
 @user_passes_test(lambda u : u.is_staff)
 def inv(request):

@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <title>Document</title>
 </head>
@@ -17,9 +19,14 @@
             <a class="navbar-brand" href="{% url 'home'%}"><img src="{% static 'mriic/MR_white.png' %}" alt="" style="height: 40px; width:85px;"></a>
             <form action="{% url 'search' %}" method="POST">
                 {% csrf_token %} 
-                <input type="text" name="name" class="me-2" style="border-radius: 20px; height: 35px; border: 1px solid #5cb85c;">
-                <input type="submit" name="submit" value="Search" class="btn btn-success" style="border-radius: 20px;">
+                <div style="display: flex; align-items: center;">
+                    <input type="text" name="name" class="me-2" style="border-radius: 20px; height: 35px; border: 1px solid #5cb85c; width: 80%;" size="40">
+                    <button type="submit" name="submit" class="btn btn-success" style="border-radius: 20px; height: 35px; margin-left: -40px; padding: 7px 15px;">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                    </button>
+                </div>
             </form>
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -33,10 +40,11 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 ">
                         <li class="nav-item">
+                            
                             <a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a>
-                            <li class="nav-item dropdown">
+                          
                                 {% if user.is_staff %}
                                
                                     <li class="nav-item"><a class="nav-link" href="{% url 'inv' %}">Edit Inventory</a></li>
@@ -54,7 +62,7 @@
                                 {% else %}
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                                    <a class="nav-link" href="{% url 'login' %}"> <div class="d-grid gap-2 mt-5"><button class="btn btn-success"> Admin Login</button></div></a>
                                 </li>
                                 {% endif %}
                             </li>

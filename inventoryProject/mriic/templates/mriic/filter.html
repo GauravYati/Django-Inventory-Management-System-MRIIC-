@@ -18,7 +18,7 @@
   {% include "mriic/NavbarLogout.html"%}
   <div class="topbar" style="margin-top: 1%;">
     <a class="btn btn-primary" style="margin-left: 2%;" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-    Filter
+    <i class="bi bi-filter"></i>
     </a>
   <div class="collapse" style="margin-left: 2%;" id="collapseExample"><form method="POST">
 <div clas="container">
@@ -32,8 +32,8 @@
         {% endfor %}
       </div>
       <br>
-      <input type="submit" value="Apply" class="btn btn-danger mb-4">
-      <a class="nav-link" href="{% url 'filter_item'%}"><button class="btn btn-primary">Close</button></a>
+      <input type="submit" value="Apply" class="btn btn-danger mb-4"><br>
+      <button class="btn btn-primary close-btn" data-bs-toggle="collapse" href="#filter-form">Close</button>
     </div>
     </form>
     

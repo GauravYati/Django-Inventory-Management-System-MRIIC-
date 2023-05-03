@@ -14,11 +14,7 @@
   </head>
 
   <body>
-    {% if messages %} {% for message in messages %}
-    <div class="mt-5 alert alert-{{ message.tags }}" id="message">
-      {{ message }}
-    </div>
-    {% endfor %} {% endif %} {% include "mriic/NavbarLogout.html" %}
+    {% include "mriic/NavbarLogout.html" %}
     <div class="container mt-5">
       {% for x in results %}
       <div class="card mt-5 mb-3">
