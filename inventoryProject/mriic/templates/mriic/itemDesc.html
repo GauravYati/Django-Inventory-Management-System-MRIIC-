@@ -17,33 +17,33 @@
     <br />
     <br /><br /><br />
     <div class="container">
-      <div class="card mb-3" style="height: 50%; width: auto">
-        <div class="row no-gutters">
-          <div class="col">
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
             <img src="{{ my_item.item_img.url }}" class="card-img" alt="..." />
           </div>
           <div class="col-md-8">
             <div class="card-body">
               <h5 class="card-title">{{ my_item.name}}</h5>
-              <hr/>
+              <hr class="my-2"/>
               <p class="card-text">
-                <b>Categories: </b>{% for category in my_item.category.all %}
-                {{ category.name }}{% if not forloop.last %},{% endif %}
-              {% endfor %}
+                <b>Categories:</b>
+                {% for category in my_item.category.all %}
+                  <span class="badge bg-secondary">#{{ category.name }}</span>
+                {% endfor %}
               </p>
+              <p class="card-text">{{ my_item.content }}</p>
+              {% if my_item.item_desc %}
               <p class="card-text">
-                <small class="text-muted">{{ my_item.content }}</small>
+                <b>Description:</b> {{ my_item.item_desc }}
               </p>
-              <p class="card-text">
-                {% if  my_item.item_desc %}
-                <b>Description: </b> {{my_item.item_desc}}
-                {% endif%}
-              </p>
+              {% endif %}
             </div>
           </div>
         </div>
       </div>
     </div>
+    
     
         {% include "mriic/footer.html"%}
  
