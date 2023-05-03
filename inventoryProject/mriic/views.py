@@ -11,10 +11,16 @@ from .forms import *
 # for users
 
 query_name = None
-
+id_val = None
 def itemDesc(request,Item_id):
-      my_item=get_object_or_404(Item,pk=Item_id)
-      return render(request,'mriic/itemDesc.html',{'my_item':my_item})
+      if request.method == 'POST':
+        global id_val
+        id_val = Item_id
+        print(id_val)
+        return redirect(inv)
+      else:
+        my_item=get_object_or_404(Item,pk=Item_id)
+        return render(request,'mriic/itemDesc.html',{'my_item':my_item})
 
 def item_add(request):
     form=ItemForm()
@@ -54,13 +60,12 @@ def search(request):
             return render(request, 'mriic/search.html', {"page_obj":results})
     return redirect(home)
 
-
 def home(request):
-    
-        contact_list = Item.objects.all().filter(featured=True)
-        paginator = Paginator(contact_list, 5) # Show 25 contacts per page.
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+
+        page_obj = Item.objects.all().filter(featured=True)
+        # paginator = Paginator(contact_list, 5) # Show 25 contacts per page.
+        # page_number = request.GET.get('page')
+        # page_obj = paginator.get_page(page_number)
 	    # my_item=Item.objects.all()contact_list
         return render(request, 'mriic/index.html', {'page_obj': page_obj})
 
@@ -123,11 +128,16 @@ def filter_item(request):
 @login_required
 @user_passes_test(lambda u : u.is_staff)
 def inv(request):
+    global id_val
     if request.method == 'POST':
-        results=Item.objects.all()
+        if id_val is not None:
+            results=Item.objects.all().filter(pk=id_val)
+        else:
+            results=Item.objects.all()
         context={
             "results":results
         }
+        id_val=None
         # print(f"{request.POST.get('search')}  {type(request.POST.get('search'))}")
         s_val = request.POST.get('search')
         r_val = request.POST.get('action')
@@ -161,9 +171,14 @@ def inv(request):
         return render(request,"mriic/inventory.html", context)
     
     else:
-        results=Item.objects.all()
+        if id_val is not None:
+            results=Item.objects.all().filter(pk=id_val)
+        else:
+            results=Item.objects.all()
+        # results=Item.objects.all()
         context={
             "results":results
         }
+        id_val=None
         return render(request,"mriic/inventory.html", context)
 
