@@ -12,6 +12,7 @@ from .forms import *
 
 query_name = None
 id_val = None
+
 def itemDesc(request,Item_id):
       if request.method == 'POST':
         global id_val
