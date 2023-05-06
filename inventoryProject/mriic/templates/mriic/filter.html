@@ -27,7 +27,9 @@
         <!-- {% with i=0 %} -->
         {% for category in categories %}
         <div class="mx-2" style="margin:5px;">
+          <br>
           <input type="checkbox" name="categories" value="{{ category.name }}">{{ category.name }}
+          <br>
           <!-- {{ i|add:"1" }}
           {% if i is 5 %}
             <br>

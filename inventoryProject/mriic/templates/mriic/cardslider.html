@@ -181,13 +181,16 @@
 								</div>
 								<div style="margin-top: 20%;">
 									<div class="d-grid gap-2 mt-5">
-										<button class="btn btn-success mt-1"
-											onclick="window.location.href='{{x.id}}'">More Info</button>
-										{% if user.is_staff %}
+
 										<form action="{{x.id}}" method="post">
 											{% csrf_token %}
-											<button class="btn btn-warning mt-1"
-											name="edit" type="submit" value="{{x.id}}">Edit Details</button></form>
+											<button class="btn btn-success mt-1 text-center" style="width: fit-content;"
+												onclick="window.location.href='{{x.id}}'">More Info</button>
+											{% if user.is_staff %}
+
+											<button class="btn btn-warning mt-1" name="edit" type="submit"
+												value="{{x.id}}">Edit Details</button>
+										</form>
 										{% endif %}
 									</div>
 								</div>
