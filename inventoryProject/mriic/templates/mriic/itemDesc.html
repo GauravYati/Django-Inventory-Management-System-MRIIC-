@@ -1,56 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    {% include "mriic/NavbarLogout.html"%}
-    <br />
-    <br /><br /><br />
-    <div class="container">
-      <div class="card mb-3">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="{{ my_item.item_img.url }}" class="card-img" alt="..." />
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{ my_item.name}}</h5>
-              <hr class="my-2"/>
-              <p class="card-text">
-                <b>Categories:</b>
-                {% for category in my_item.category.all %}
-                  <span class="badge bg-secondary">#{{ category.name }}</span>
-                {% endfor %}
-              </p>
-              <p class="card-text">{{ my_item.content }}</p>
-              {% if my_item.item_desc %}
-              <p class="card-text">
-                <b>Description:</b> {{ my_item.item_desc }}
-              </p>
-              {% endif %}
+{% extends "mriic/base.html" %}
+{% load static %}
+
+{% block title %}{{ my_item.name }} | MRIIC Inventory{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-6">
+        <img class="detail-image" src="{{ my_item.item_img.url }}" alt="{{ my_item.name }}" onerror="this.onerror=null; this.src='{% static 'mriic/logo2.png' %}';">
+      </div>
+      <div class="col-lg-6">
+        <div class="admin-panel">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <span class="eyebrow detail-eyebrow mb-3"><i class="bi bi-box"></i> Item details</span>
+              <h1 class="section-title mb-2">{{ my_item.name }}</h1>
+              <p class="muted">Quantity available</p>
+              <div class="display-6 fw-bold mb-3">{{ my_item.item_qty }}</div>
             </div>
+            {% if my_item.featured %}
+              <span class="badge text-bg-warning">Featured</span>
+            {% endif %}
+          </div>
+
+          <hr>
+          <h2 class="h6 text-uppercase muted">Categories</h2>
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            {% for category in my_item.category.all %}
+              <span class="badge badge-soft">{{ category.name }}</span>
+            {% empty %}
+              <span class="badge text-bg-light">Uncategorized</span>
+            {% endfor %}
+          </div>
+
+          {% if my_item.tags.all %}
+            <h2 class="h6 text-uppercase muted">Tags</h2>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+              {% for tag in my_item.tags.all %}
+                <span class="badge text-bg-light">#{{ tag.name }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <h2 class="h5 fw-bold">Description</h2>
+          <p class="mb-4">{{ my_item.item_desc|default:"No description has been added yet." }}</p>
+
+          <section class="borrow-card mb-4">
+            <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+              <div>
+                <h2 class="h5 fw-bold mb-1">Borrow this resource</h2>
+                <p class="muted mb-0">Submit a request. Staff approval is required before inventory is deducted.</p>
+              </div>
+              <span class="badge badge-soft">{{ active_borrows.count }} active borrow{{ active_borrows.count|pluralize }}</span>
+            </div>
+            {% if my_item.item_qty > 0 %}
+              <form action="{% url 'borrow_request_create' my_item.id %}" method="post" class="borrow-form">
+                {% csrf_token %}
+                <div>
+                  <label class="form-label" for="{{ borrow_form.requester_name.id_for_label }}">Name</label>
+                  {{ borrow_form.requester_name }}
+                </div>
+                <div>
+                  <label class="form-label" for="{{ borrow_form.requester_email.id_for_label }}">Email</label>
+                  {{ borrow_form.requester_email }}
+                </div>
+                <div>
+                  <label class="form-label" for="{{ borrow_form.quantity.id_for_label }}">Quantity</label>
+                  {{ borrow_form.quantity }}
+                </div>
+                <div class="borrow-purpose">
+                  <label class="form-label" for="{{ borrow_form.purpose.id_for_label }}">Purpose</label>
+                  {{ borrow_form.purpose }}
+                </div>
+                <button class="btn btn-primary" type="submit"><i class="bi bi-send me-1"></i>Submit request</button>
+              </form>
+            {% else %}
+              <div class="alert app-alert mb-0">This resource is currently unavailable for borrowing.</div>
+            {% endif %}
+          </section>
+
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" href="{% url 'filter_item' %}"><i class="bi bi-arrow-left me-1"></i>Back to inventory</a>
+            {% if user.is_staff %}
+              <a class="btn btn-primary" href="{% url 'item_edit' my_item.id %}"><i class="bi bi-pencil-square me-1"></i>Edit resource</a>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
-    
-    
-        {% include "mriic/footer.html"%}
- 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-  </body>
-</html>
+  </div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}MRIIC Inventory{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'mriic/app.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg app-navbar sticky-top">
+      <div class="container app-nav-inner">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+          <img class="brand-mark" src="{% static 'mriic/logo2.png' %}" alt="MRIIC" />
+          <span class="brand-text">
+            <span class="fw-bold">MRIIC</span>
+            <small>Research Lab Inventory</small>
+          </span>
+        </a>
+
+        <form class="d-flex nav-search mx-lg-auto" action="{% url 'search' %}" method="get" role="search">
+          <div class="search-shell">
+            <i class="bi bi-search"></i>
+            <input class="form-control" type="search" name="q" value="{{ query|default:'' }}" placeholder="Search items, categories, tags" aria-label="Search inventory">
+            <button class="btn btn-primary" type="submit">
+              <span class="search-label">Search</span>
+              <i class="bi bi-arrow-right-short search-submit-icon"></i>
+            </button>
+          </div>
+        </form>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse flex-grow-0" id="mainNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2 app-nav-actions">
+            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'filter_item' %}">Inventory</a></li>
+            {% if user.is_staff %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'inv' %}">Manage</a></li>
+              <li class="nav-item"><a class="btn btn-sm btn-warning" href="{% url 'image_upload' %}"><i class="bi bi-plus-lg me-1"></i>Add</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+                </form>
+              </li>
+            {% else %}
+              <li class="nav-item"><a class="btn btn-sm btn-outline-secondary" href="{% url 'login' %}">Staff Login</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% if messages %}
+      <div class="container message-stack">
+        {% for message in messages %}
+          <div class="alert app-alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block hero %}{% endblock %}
+
+    <main class="page-shell">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+      <div class="container footer-card">
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-5">
+            <div class="footer-brand mb-2">MRIIC Research Lab Inventory</div>
+            <p class="mb-0">A clearer way to discover, track, and manage research equipment across the incubation center.</p>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="fw-semibold text-white mb-2">Explore</div>
+            <div class="vstack gap-2">
+              <a class="footer-link" href="{% url 'home' %}">Home</a>
+              <a class="footer-link" href="{% url 'filter_item' %}">Inventory</a>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="fw-semibold text-white mb-2">Staff</div>
+            <div class="vstack gap-2">
+              <a class="footer-link" href="{% url 'login' %}">Staff Login</a>
+              {% if user.is_staff %}
+                <a class="footer-link" href="{% url 'inv' %}">Manage</a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="fw-semibold text-white mb-2">Status</div>
+            <p class="mb-0">Built for fast lookup, clean records, and reliable inventory decisions.</p>
+          </div>
+        </div>
+        <div class="footer-mini mt-4 d-flex flex-column flex-md-row justify-content-between gap-2">
+          <span>Manav Rachna Incubation and Innovation Center</span>
+          <span>Inventory Management System</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

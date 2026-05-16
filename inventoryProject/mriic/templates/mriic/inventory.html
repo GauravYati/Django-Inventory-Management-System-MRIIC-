@@ -1,97 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inventory</title>
-    <!-- <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    /> -->
-  </head>
+{% extends "mriic/base.html" %}
+{% load static %}
 
-  <body>
-    {% include "mriic/NavbarLogout.html" %}
-    <div class="container mt-5">
-      {% for x in results %}
-      <div class="card mt-5 mb-3">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img
-              src="{{x.item_img.url}}"
-              class="img-fluid rounded-start"
-              alt="..."
-              style="height: 300px; object-fit: fill; padding: 0"
-            />
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{x.name}}</h5>
-                <p class="card-text">Categories:
-                  {% for category in x.category.all %}
-                    {{ category.name }}{% if not forloop.last %}, {% endif %}
-                  {% endfor %}</p>
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <div>
-                    <input
-                      class="text-center mb-3"
-                      type="number"
-                      value="{{x.item_qty}}"
-                      style="width: fit-content"
-                      name="qty"
-                    />
-                  </div>
-                  {% if x.featured %}
-                  <div>
-                    <input
-                      class="mb-3"
-                      type="checkbox"
-                      value="True"
-                      name="isFeatured"
-                      id="checkFeatured"
-                      checked
-                    />
-                    <label for="checkFeatured">Featured</label>
-                  </div>
-                  {% else %}
-                  <div>
-                    <input
-                      class="mb-3"
-                      type="checkbox"
-                      value="True"
-                      name="isFeatured"
-                      id="checkFeatured"
-                    />
-                    <label for="checkFeatured">Featured</label>
-                  </div>
-                  {% endif %}
-                  <div>
-                    <input
-                      class="text-center mb-3"
-                      type="text"
-                      value="{{x.name}}"
-                      style="visibility: hidden; width: fit-content"
-                      name="item_name"
-                    />
-                  </div>
-                  <button type="submit" class="btn btn-success" name="action" value="save">save</button>
-                  <button type="submit" class="btn btn-danger" name="action" value="delete">delete</button>
-                </form>
-            </div>
-          </div>
+{% block title %}Staff Workspace | MRIIC Inventory{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <section class="admin-hero">
+      <div>
+        <span class="admin-kicker"><i class="bi bi-shield-check"></i> Staff Workspace</span>
+        <h1>Manage research lab inventory</h1>
+        <p>Update quantities, highlight important resources, and keep MRIIC equipment records clean.</p>
+      </div>
+      <a class="btn btn-primary" href="{% url 'image_upload' %}"><i class="bi bi-plus-lg me-1"></i>Add Resource</a>
+    </section>
+
+    <section class="admin-stats" aria-label="Inventory summary">
+      <div class="admin-stat">
+        <span>Total resources</span>
+        <strong>{{ total_items }}</strong>
+      </div>
+      <div class="admin-stat">
+        <span>Featured</span>
+        <strong>{{ featured_items }}</strong>
+      </div>
+      <div class="admin-stat">
+        <span>Low stock</span>
+        <strong>{{ low_stock_items }}</strong>
+      </div>
+      <div class="admin-stat">
+        <span>Pending borrows</span>
+        <strong>{{ pending_borrow_count }}</strong>
+      </div>
+      <div class="admin-stat">
+        <span>Currently borrowed</span>
+        <strong>{{ active_borrow_count }}</strong>
+      </div>
+    </section>
+
+    <section class="borrow-admin-panel">
+      <div class="section-heading mb-3">
+        <div>
+          <h2 class="section-title h3 mb-1">Borrow notifications</h2>
+          <p class="muted mb-0">Approve requests to deduct stock. Mark returned resources to restore stock.</p>
         </div>
       </div>
+      <div class="borrow-admin-list">
+        {% for borrow in borrow_requests %}
+          <article class="borrow-admin-row">
+            <div>
+              <strong>{{ borrow.item.name }}</strong>
+              <p class="mb-1">{{ borrow.requester_name }} · {{ borrow.requester_email }}</p>
+              <span class="badge {% if borrow.status == 'pending' %}text-bg-warning{% else %}text-bg-primary{% endif %}">
+                {{ borrow.get_status_display }} · Qty {{ borrow.quantity }}
+              </span>
+              {% if borrow.purpose %}
+                <p class="borrow-purpose-text">{{ borrow.purpose }}</p>
+              {% endif %}
+            </div>
+            <div class="borrow-admin-actions">
+              {% if borrow.status == 'pending' %}
+                <form method="post" action="{% url 'borrow_request_update' borrow.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-primary" name="action" value="approve" type="submit">Approve</button>
+                </form>
+                <form method="post" action="{% url 'borrow_request_update' borrow.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-outline-danger" name="action" value="reject" type="submit">Reject</button>
+                </form>
+              {% elif borrow.status == 'approved' %}
+                <form method="post" action="{% url 'borrow_request_update' borrow.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-outline-primary" name="action" value="return" type="submit">Mark returned</button>
+                </form>
+              {% endif %}
+            </div>
+          </article>
+        {% empty %}
+          <div class="empty-state py-4">
+            <div class="empty-state-icon"><i class="bi bi-bell"></i></div>
+            <h3 class="h5">No active borrow notifications</h3>
+            <p class="muted mb-0">New borrow requests will appear here.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <form class="admin-toolbar" method="get">
+      <div>
+        <label class="form-label" for="inventory-search">Search inventory</label>
+        <input id="inventory-search" class="form-control" name="q" value="{{ search_term }}" placeholder="Search by resource name">
+      </div>
+      <button class="btn btn-primary" type="submit"><i class="bi bi-search me-1"></i>Search</button>
+      <a class="btn btn-outline-secondary" href="{% url 'inv' %}">Reset</a>
+    </form>
+
+    <div class="admin-list">
+      {% for x in results %}
+        <section class="inventory-row">
+          <div class="inventory-resource">
+            <img class="inventory-thumb" src="{{ x.item_img.url }}" alt="{{ x.name }}" onerror="this.onerror=null; this.src='{% static 'mriic/logo2.png' %}';">
+            <div>
+              <h2>{{ x.name }}</h2>
+              <div class="d-flex flex-wrap gap-1">
+                {% for category in x.category.all %}
+                  <span class="badge badge-soft">{{ category.name }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <form class="inventory-controls" action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="item_id" value="{{ x.id }}">
+            <div class="control-field">
+              <label class="form-label" for="qty-{{ x.id }}">Quantity</label>
+              <input id="qty-{{ x.id }}" class="form-control" type="number" min="0" value="{{ x.item_qty }}" name="qty">
+            </div>
+            <label class="feature-toggle">
+              <input type="checkbox" name="isFeatured" {% if x.featured %}checked{% endif %}>
+              <span>Featured</span>
+            </label>
+            <div class="row-actions">
+              <button type="submit" class="btn btn-primary" name="action" value="save"><i class="bi bi-check2 me-1"></i>Save</button>
+              <a class="btn btn-outline-secondary icon-btn" href="{% url 'item_edit' x.id %}" aria-label="Edit {{ x.name }}"><i class="bi bi-pencil-square"></i></a>
+              <button type="submit" class="btn btn-outline-danger icon-btn" name="action" value="delete" onclick="return confirm('Delete {{ x.name }}?')" aria-label="Delete {{ x.name }}"><i class="bi bi-trash"></i></button>
+            </div>
+          </form>
+        </section>
+      {% empty %}
+        <div class="empty-state">
+          <div class="empty-state-icon"><i class="bi bi-inboxes"></i></div>
+          <h2 class="h4">No inventory records found</h2>
+          <p class="muted mb-0">Add your first resource or reset the current search.</p>
+        </div>
       {% endfor %}
     </div>
-    {% include "mriic/footer.html" %}
-    <script>
-      var x = document.getElementById("message").setTimeout(() => {
-          alert("{{message.tags}}")
-      }, 3000);
-    </script>
-  </body>
-</html>
+  </div>
+{% endblock %}

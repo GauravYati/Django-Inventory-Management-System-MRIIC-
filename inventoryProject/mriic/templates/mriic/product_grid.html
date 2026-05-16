@@ -1,0 +1,76 @@
+{% load static %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 product-grid">
+  {% for x in page_obj %}
+    <div class="col">
+      <article class="card product-card">
+        <div class="product-media">
+          <img class="product-image" src="{{ x.item_img.url }}" alt="{{ x.name }}" onerror="this.onerror=null; this.src='{% static 'mriic/logo2.png' %}';">
+          <span class="quantity-badge">{{ x.item_qty }} in stock</span>
+        </div>
+        <div class="card-body">
+          <div>
+            <h2 class="product-title mb-1">{{ x.name }}</h2>
+            <p class="product-meta mb-0">Research lab resource</p>
+          </div>
+          <div class="d-flex flex-wrap gap-1">
+            {% for category in x.category.all %}
+              <span class="badge badge-soft">{{ category.name }}</span>
+            {% empty %}
+              <span class="badge text-bg-light">Uncategorized</span>
+            {% endfor %}
+          </div>
+          <div class="product-actions">
+            <a class="btn btn-primary flex-fill" href="{% url 'itemDesc' x.id %}">
+              View details
+            </a>
+            {% if user.is_staff %}
+              <a class="btn btn-outline-secondary icon-btn" href="{% url 'item_edit' x.id %}" aria-label="Edit {{ x.name }}">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="empty-state text-center p-5">
+        <div class="empty-state-icon"><i class="bi bi-search"></i></div>
+        <h2 class="h4">No items found</h2>
+        <p class="muted mb-0">Try changing your search or filter selection.</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+  <nav class="mt-5 pagination-wrap" aria-label="Product pages">
+    <div class="pagination-shell">
+      {% if page_obj.has_previous %}
+        <a class="page-control" href="?{{ page_query }}page={{ page_obj.previous_page_number }}" aria-label="Previous page">
+          <i class="bi bi-arrow-left"></i>
+          <span>Previous</span>
+        </a>
+      {% else %}
+        <span class="page-control is-disabled">
+          <i class="bi bi-arrow-left"></i>
+          <span>Previous</span>
+        </span>
+      {% endif %}
+      <span class="page-status" aria-current="page">
+        Page <strong>{{ page_obj.number }}</strong> of <strong>{{ page_obj.paginator.num_pages }}</strong>
+      </span>
+      {% if page_obj.has_next %}
+        <a class="page-control" href="?{{ page_query }}page={{ page_obj.next_page_number }}" aria-label="Next page">
+          <span>Next</span>
+          <i class="bi bi-arrow-right"></i>
+        </a>
+      {% else %}
+        <span class="page-control is-disabled">
+          <span>Next</span>
+          <i class="bi bi-arrow-right"></i>
+        </span>
+      {% endif %}
+    </div>
+  </nav>
+{% endif %}
